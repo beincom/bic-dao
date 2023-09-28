@@ -8,8 +8,8 @@ import "@openzeppelin/contracts/governance/utils/Votes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
 
 contract BgtVote is Governor, GovernorCountingSimple, GovernorSettings, Votes {
-    constructor() Governor("BGT Vote") GovernorSettings(5, 50, 100) {}
-
+//    constructor() Governor("BGT Vote") GovernorSettings(5, 50, 100) {}
+    constructor() Governor("BGT Vote") GovernorSettings(5, 50, 0) {}
 
     function proposalThreshold()
     public
