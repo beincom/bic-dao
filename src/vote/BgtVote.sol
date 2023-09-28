@@ -6,10 +6,13 @@ import "@openzeppelin/contracts/governance/Governor.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
 import "@openzeppelin/contracts/governance/utils/Votes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
+import "forge-std/console.sol";
 
 contract BgtVote is Governor, GovernorCountingSimple, GovernorSettings, Votes {
-//    constructor() Governor("BGT Vote") GovernorSettings(5, 50, 100) {}
-    constructor() Governor("BGT Vote") GovernorSettings(5, 50, 0) {}
+    address public bgtAddress;
+    constructor(address _bgtAddress) Governor("BGT Vote") GovernorSettings(5, 50, 100) {
+        bgtAddress = _bgtAddress;
+    }
 
     function proposalThreshold()
     public
@@ -28,12 +31,12 @@ contract BgtVote is Governor, GovernorCountingSimple, GovernorSettings, Votes {
         return Votes.clock();
     }
 
-    function _getVotes(address account, uint256 timepoint, bytes memory params) internal view virtual override returns (uint256) {
-        return 0;
+    function _getVotes(address account, uint256 timepoint, bytes memory /* params */) internal view virtual override returns (uint256) {
+        return Votes.getPastVotes(account, timepoint);
     }
 
-    function _getVotingUnits(address) internal view virtual override returns (uint256) {
-        return 0;
+    function _getVotingUnits(address owner) internal view virtual override returns (uint256) {
+        return BeinGiveTake(bgtAddress).balanceOf(owner);
     }
 
     function quorum(uint256 timepoint) public view virtual override returns (uint256) {

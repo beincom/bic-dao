@@ -18,20 +18,43 @@ contract BgtVoteTest is Test {
     address public user4 = vm.addr(user4PKey);
 
     function setUp() public {
-        vm.prank(user1);
         bgt = new BeinGiveTake();
-        bgtVote = new BgtVote();
+        bgtVote = new BgtVote(address(bgt));
+
+        bgt.mintTo(user1, 1000);
+        bgt.mintTo(user2, 2000);
+        bgt.mintTo(user3, 3000);
+        bgt.mintTo(user4, 4000);
+
+        bgt.grantRole(bgt.MINT_ROLE(), address(bgtVote));
     }
 
     function testVote() public {
+        uint256 user1Votes = bgtVote.getVotes(user1);
+        assertEq(user1Votes, 0);
+        vm.prank(user1);
+        bgtVote.delegate(user1);
+        user1Votes = bgtVote.getVotes(user1);
+        assertEq(user1Votes, 1000);
+
+        vm.roll(block.number + 1); // delegate active after 1 block
+
         address[] memory targets = new address[](1);
         targets[0] = address(bgt);
         uint256[] memory values = new uint256[](1);
         values[0] = 0;
         bytes[] memory callDatas = new bytes[](1);
-        callDatas[0] = abi.encodeWithSignature("mint(address,uint256)", user1, 100);
+        callDatas[0] = abi.encodeWithSignature("mintTo(address,uint256)", user1, 100);
+        vm.prank(user1);
         uint256 proposeId = bgtVote.propose(targets, values, callDatas, "Lets mint 100 BGT for user1");
         assertEq(uint(bgtVote.state(proposeId)), 0);
+
+        vm.prank(user2);
+        bgtVote.delegate(user1);
+        vm.prank(user3);
+        bgtVote.delegate(user3);
+        vm.prank(user4);
+        bgtVote.delegate(user4);
 
         vm.roll(block.number + 5 + 1);
         assertEq(uint(bgtVote.state(proposeId)), 1);
@@ -46,17 +69,16 @@ contract BgtVoteTest is Test {
         bgtVote.castVote(proposeId, 0);
 
         (uint256 againstVotes, uint256 forVotes, uint256 abstainVotes) = bgtVote.proposalVotes(proposeId);
-        assertEq(againstVotes, 100);
-        assertEq(forVotes, 300);
+        assertEq(againstVotes, 4000);
+        assertEq(forVotes, 6000);
         assertEq(abstainVotes, 0);
 
         vm.roll(block.number + 50 + 1);
-        assertEq(uint(bgtVote.state(proposeId)), 2);
+        assertEq(uint(bgtVote.state(proposeId)), 4); // succeeded
 
-//        vm.prank(user1);
-//        bgtVote.execute(proposeId);
-//        assertEq(bgt.balanceOf(user1), 100);
-//        assertEq(bgt.totalSupply(), 100);
+        vm.prank(user1);
+        bgtVote.execute(targets, values, callDatas, keccak256(bytes("Lets mint 100 BGT for user1")));
+        assertEq(bgt.balanceOf(user1), 1100);
     }
 
 }
