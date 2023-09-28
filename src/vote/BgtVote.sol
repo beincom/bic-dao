@@ -39,7 +39,7 @@ contract BgtVote is Governor, GovernorCountingSimple, GovernorSettings, Votes {
         return BeinGiveTake(bgtAddress).balanceOf(owner);
     }
 
-    function quorum(uint256 timepoint) public view virtual override returns (uint256) {
+    function quorum(uint256 /* timepoint */) public view virtual override returns (uint256) {
         return 0;
     }
 }
