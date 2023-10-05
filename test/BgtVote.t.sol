@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "../src/token/BeinGiveTake.sol";
-import "../src/vote/BgtVote.sol";
+import "../src/governance/BgtVote.sol";
 import "forge-std/Test.sol";
 
 contract BgtVoteTest is Test {

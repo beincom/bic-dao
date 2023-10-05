@@ -18,21 +18,41 @@ async function main() {
         console.log(`Verify fail BGT on ${bgtAddress} with error ${e}`);
     }
 
-    const BgtVote = await ethers.getContractFactory("BgtVote");
-    const bgtVote = await BgtVote.deploy(bgtAddress);
-    await bgtVote.waitForDeployment();
-    const bgtVoteAddress = await bgtVote.getAddress();
+    const BicVotes = await ethers.getContractFactory("BicVotes");
+    const bicVotes = await BicVotes.deploy(bgtAddress);
+    await bicVotes.waitForDeployment();
+    const bicVotesAddress = await bicVotes.getAddress();
 
-    console.log(`Deploy success BgtVote on ${bgtAddress}`);
+    console.log(`Deploy success BicVotes on ${bicVotesAddress}`);
     try {
-        console.log(`Verify BgtVote on ${bgtAddress}`);
+        console.log(`Verify BicVotes on ${bicVotesAddress}`);
         await run(`verify:verify`, {
-            address: bgtVoteAddress,
+            address: bicVotesAddress,
             constructorArguments: [bgtAddress],
         });
-        console.log(`Verify success BgtVote on ${bgtVoteAddress}`);
+        console.log(`Verify success BicVotes on ${bicVotesAddress}`);
     } catch (e) {
-        console.log(`Verify fail BgtVote on ${bgtVoteAddress} with error ${e}`);
+        console.log(`Verify fail BicVotes on ${bicVotesAddress} with error ${e}`);
+    }
+
+    const BicGovernor = await ethers.getContractFactory("BicGovernor");
+    const bicGovernor = await BicGovernor.deploy(bicVotesAddress);
+    await bicGovernor.waitForDeployment();
+    const bicGovernorAddress = await bicGovernor.getAddress();
+
+    // const bicGovernorAddress = "0x1fF8593316c5DEC3a181a1955386d32f67932E97"
+
+    console.log(`Deploy success BicGovernor on ${bicGovernorAddress}`);
+    try {
+        console.log(`Verify BicGovernor on ${bicGovernorAddress}`);
+        await run(`verify:verify`, {
+            address: bicGovernorAddress,
+            constructorArguments: [bicVotesAddress],
+            // constructorArguments: ["0x9ba1537e29290aB2147fef34504E3ec65891b25A"],
+        });
+        console.log(`Verify success BicGovernor on ${bicGovernorAddress}`);
+    } catch (e) {
+        console.log(`Verify fail BicGovernor on ${bicGovernorAddress} with error ${e}`);
     }
 }
 

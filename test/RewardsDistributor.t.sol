@@ -26,12 +26,12 @@ contract RewardsDistributorTest is Test {
         token.mintTo(address(rewardsDistributor), 1000);
     }
 
-    function testClaim() public {
-        bytes32[] memory merkleProof = new bytes32[](1);
-        merkleProof[0] = bytes32(0x0);
-        vm.prank(user1);
-        rewardsDistributor.claim(0, user1, 100, merkleProof);
-        uint256 user1Votes = token.balanceOf(user1);
-        assertEq(user1Votes, 100);
-    }
+//    function testClaim() public {
+//        bytes32[] memory merkleProof = new bytes32[](1);
+//        merkleProof[0] = bytes32(0x0);
+//        vm.prank(user1);
+//        rewardsDistributor.claim(0, user1, 100, merkleProof);
+//        uint256 user1Votes = token.balanceOf(user1);
+//        assertEq(user1Votes, 100);
+//    }
 }

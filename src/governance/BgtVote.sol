@@ -10,7 +10,7 @@ import "forge-std/console.sol";
 
 contract BgtVote is Governor, GovernorCountingSimple, GovernorSettings, Votes {
     address public bgtAddress;
-    constructor(address _bgtAddress) Governor("BGT Vote") GovernorSettings(60, 300, 100) { //delay 3' vote 15' threshold 100 wei BGT
+    constructor(address _bgtAddress) Governor("BGT Vote") GovernorSettings(5, 50, 100) {
         bgtAddress = _bgtAddress;
     }
 
