@@ -17,9 +17,10 @@
     "@types/mocha": ">=9.1.0",
     "@types/node": ">=16.0.0",
     "chai": "^4.2.0",
-    "ethers": "5.7.2",
+    "ethers": "6.7.1",
     "hardhat": "^2.17.3",
     "hardhat-gas-reporter": "^1.0.8",
+    "hardhat-preprocessor": "^0.1.5",
     "keccak256": "^1.0.6",
     "merkletreejs": "^0.3.10",
     "solidity-coverage": "^0.8.0",
@@ -28,7 +29,8 @@
     "typescript": ">=4.5.0"
   },
   "scripts": {
-    "generate-root": "node scripts/generateRoot.ts 300 5"
+    "generate-root": "node scripts/generateRoot.ts 300 5",
+    "deploy:testnet": "hardhat run --network testnet scripts/deploy.ts"
   },
   "dependencies": {
     "dotenv": "^16.3.1"
