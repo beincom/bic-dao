@@ -21,17 +21,31 @@ contract RewardsDistributorTest is Test {
 
     function setUp() public {
         token = new TokenVote();
-        rewardsDistributor = new RewardsDistributor(address(token), 0x0);
+        string[] memory inputs = new string[](5);
 
-        token.mintTo(address(rewardsDistributor), 1000);
+        inputs[0] = "node";
+        inputs[1] = "src/test/scripts/generateRoot.ts";
+
+        bytes memory result = vm.ffi(inputs);
+        // revert();
+        bytes32 root = abi.decode(result, (bytes32));
+        rewardsDistributor = new RewardsDistributor(address(token), root);
+
+        token.mintTo(address(rewardsDistributor), 10000);
     }
 
-//    function testClaim() public {
-//        bytes32[] memory merkleProof = new bytes32[](1);
-//        merkleProof[0] = bytes32(0x0);
-//        vm.prank(user1);
-//        rewardsDistributor.claim(0, user1, 100, merkleProof);
-//        uint256 user1Votes = token.balanceOf(user1);
-//        assertEq(user1Votes, 100);
-//    }
+    function testClaim() public {
+
+        string[] memory inputs = new string[](5);
+
+        inputs[0] = "node";
+        inputs[1] = "src/test/scripts/getProof.ts";
+        bytes memory result = vm.ffi(inputs);
+        bytes32[] memory proofs = abi.decode(result, (bytes32[]));
+
+        vm.prank(0x92Bb439374a091c7507bE100183d8D1Ed2c9dAD3);
+        rewardsDistributor.claim(0, user1, 100, proofs);
+        uint256 user1Votes = token.balanceOf(user1);
+        assertEq(user1Votes, 100);
+    }
 }
