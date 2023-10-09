@@ -19,7 +19,7 @@ let currency = process.argv[4];
 
 const hashedLeafs = members.map(l => {
         // console.log('[l, val, price, currency]: ', [l, val, price, currency])
-        return ethers.utils.solidityKeccak256(["address", "uint256"], [l, val])
+        return ethers.solidityPackedKeccak256(["address", "uint256"], [l, val])
     }
 );
 
@@ -29,4 +29,4 @@ const tree = new MerkleTree(hashedLeafs, keccak256, {
     sortPairs: true,
 });
 
-process.stdout.write(ethers.utils.defaultAbiCoder.encode(["bytes32"], [tree.getHexRoot()]));
+process.stdout.write(ethers.AbiCoder.defaultAbiCoder().encode(["bytes32"], [tree.getHexRoot()]));
