@@ -24,7 +24,7 @@ contract RewardsDistributorTest is Test {
         string[] memory inputs = new string[](5);
 
         inputs[0] = "node";
-        inputs[1] = "src/test/scripts/generateRoot.ts";
+        inputs[1] = "scripts/generateRoot.ts";
 
         bytes memory result = vm.ffi(inputs);
         // revert();
@@ -39,13 +39,17 @@ contract RewardsDistributorTest is Test {
         string[] memory inputs = new string[](5);
 
         inputs[0] = "node";
-        inputs[1] = "src/test/scripts/getProof.ts";
+        inputs[1] = "scripts/getProof.ts";
         bytes memory result = vm.ffi(inputs);
         bytes32[] memory proofs = abi.decode(result, (bytes32[]));
 
+        rewardsDistributor.claim(0, 0x92Bb439374a091c7507bE100183d8D1Ed2c9dAD3, 1000, proofs); // anyone can claim if they have the proof for the owner
+        uint256 user1Votes = token.balanceOf(0x92Bb439374a091c7507bE100183d8D1Ed2c9dAD3);
+        assertEq(user1Votes, 1000);
+
         vm.prank(0x92Bb439374a091c7507bE100183d8D1Ed2c9dAD3);
-        rewardsDistributor.claim(0, user1, 100, proofs);
-        uint256 user1Votes = token.balanceOf(user1);
-        assertEq(user1Votes, 100);
+        vm.expectRevert("RewardsDistributor: Drop already claimed.");
+        rewardsDistributor.claim(0, 0x92Bb439374a091c7507bE100183d8D1Ed2c9dAD3, 1000, proofs);
+
     }
 }

@@ -25,6 +25,7 @@ const tree = new MerkleTree(hashedLeafs, keccak256, {
   sortLeaves: true,
   sortPairs: true,
 });
+// process.stdout.write(ethers.AbiCoder.defaultAbiCoder().encode(["bytes32"], [tree.getHexRoot()]));
 
 const expectedProof = tree.getHexProof(
   ethers.solidityPackedKeccak256(["uint256", "address", "uint256"], [0, members[0], 1000]),
