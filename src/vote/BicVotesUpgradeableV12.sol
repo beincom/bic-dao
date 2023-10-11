@@ -2,7 +2,9 @@
 pragma solidity ^0.8.19;
 
 import "../token/BeinGiveTake.sol";
+import "../token/NftVote.sol";
 import "@openzeppelin/contracts-upgradeable/governance/utils/VotesUpgradeable.sol";
+import "hardhat/console.sol";
 
 contract BicVotesUpgradeableV12 is VotesUpgradeable {
     address public bgtAddress;
@@ -21,7 +23,9 @@ contract BicVotesUpgradeableV12 is VotesUpgradeable {
     }
 
     function _getVotingUnits(address owner) internal view virtual override returns (uint256) {
-        return BeinGiveTake(bgtAddress).balanceOf(owner);
+        console.log("BicVotesUpgradeableV12 _getVotingUnits");
+//        return BeinGiveTake(bgtAddress).balanceOf(owner) + NftVote(nftAddress).balanceOf(owner)*1000;
+        return 2000;
     }
 
     function CLOCK_MODE() public view virtual override returns (string memory) {

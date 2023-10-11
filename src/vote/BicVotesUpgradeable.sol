@@ -3,6 +3,7 @@ pragma solidity ^0.8.19;
 
 import "../token/BeinGiveTake.sol";
 import "@openzeppelin/contracts-upgradeable/governance/utils/VotesUpgradeable.sol";
+import "hardhat/console.sol";
 
 contract BicVotesUpgradeable is VotesUpgradeable {
     address public bgtAddress;
@@ -18,6 +19,7 @@ contract BicVotesUpgradeable is VotesUpgradeable {
     }
 
     function _getVotingUnits(address owner) internal view virtual override returns (uint256) {
+        console.log("BicVotesUpgradeable _getVotingUnits");
         return BeinGiveTake(bgtAddress).balanceOf(owner);
     }
 
