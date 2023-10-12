@@ -48,23 +48,25 @@ contract BicPower is Votes {
     }
 
     function _delegate(address owner, address delegatee) internal virtual override {
-        require(owner != delegatee, "BicPower: self-delegation");
         uint256 oldDelegateAmount = currentDelegateAmount[owner];
         uint256 newDelegateAmount = _getVotingUnits(owner);
         address oldDelegate = delegates(owner);
 
         // update in case BGT be minted
-        if(newDelegateAmount > oldDelegateAmount) {
+        if(newDelegateAmount > oldDelegateAmount && oldDelegateAmount > 0) {
             super._transferVotingUnits(address(0), oldDelegate, newDelegateAmount - oldDelegateAmount);
         }
+        currentDelegateAmount[owner] = newDelegateAmount;
         super._delegate(owner, delegatee);
     }
 
     function getVotes(address account) public view virtual override returns (uint256) {
-        return super.getVotes(account) + _getVotingUnits(account);
+        if (delegates(account) == address(0)) return _getVotingUnits(account);
+        return super.getVotes(account);
     }
 
-    function getPastVotes(address /* account */, uint256 /* timepoint */) public view virtual override returns (uint256) {
-        return 0;  // Disable this function
+    function getPastVotes(address account, uint256 timepoint) public view virtual override returns (uint256) {
+        if (delegates(account) == address(0)) return _getVotingUnits(account);
+        return super.getPastVotes(account, timepoint);
     }
 }
