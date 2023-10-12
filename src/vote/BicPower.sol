@@ -3,6 +3,7 @@ pragma solidity ^0.8.19;
 
 import "../token/BeinGiveTake.sol";
 import "@openzeppelin/contracts/governance/utils/Votes.sol";
+import "forge-std/console.sol";
 
 contract BicPower is Votes {
     address public bgtAddress;
@@ -53,20 +54,10 @@ contract BicPower is Votes {
         address oldDelegate = delegates(owner);
 
         // update in case BGT be minted
-        if(newDelegateAmount > oldDelegateAmount && oldDelegateAmount > 0) {
-            super._transferVotingUnits(address(0), oldDelegate, newDelegateAmount - oldDelegateAmount);
+        if(newDelegateAmount > oldDelegateAmount) {
+            super._transferVotingUnits(address(0), delegatee, newDelegateAmount - oldDelegateAmount);
         }
         currentDelegateAmount[owner] = newDelegateAmount;
         super._delegate(owner, delegatee);
-    }
-
-    function getVotes(address account) public view virtual override returns (uint256) {
-        if (delegates(account) == address(0)) return _getVotingUnits(account);
-        return super.getVotes(account);
-    }
-
-    function getPastVotes(address account, uint256 timepoint) public view virtual override returns (uint256) {
-        if (delegates(account) == address(0)) return _getVotingUnits(account);
-        return super.getPastVotes(account, timepoint);
     }
 }

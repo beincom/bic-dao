@@ -10,6 +10,8 @@ contract TokenVoteTest is Test {
     address public user1 = vm.addr(user1PKey);
     uint256 public user2PKey = 0x2;
     address public user2 = vm.addr(user2PKey);
+    uint256 public user3PKey = 0x3;
+    address public user3 = vm.addr(user3PKey);
 
     function setUp() public {
         tokenVote = new TokenVote();
@@ -54,5 +56,14 @@ contract TokenVoteTest is Test {
         tokenVote.mintTo(user1, 100);
         assertEq(tokenVote.getVotes(user1), 0);
         assertEq(tokenVote.getVotes(user2), 300);
+
+        tokenVote.mintTo(user3, 100);
+
+        vm.roll(block.number + 10);
+        assertEq(tokenVote.getVotes(user1), 0);
+        assertEq(tokenVote.getVotes(user2), 300);
+        assertEq(tokenVote.getVotes(user3), 0);
+
+        assertEq(tokenVote.getPastTotalSupply(block.number - 1), 400);
     }
 }

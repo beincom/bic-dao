@@ -33,6 +33,24 @@ contract BicPowerTest is Test {
     }
 
     function testPower() public {
+        vm.prank(user1);
+        bicPower.delegate(user1);
+        vm.roll(block.number + 1);
         assertEq(bicPower.getVotes(user1), 1000);
+        vm.roll(block.number + 1);
+        assertEq(bicPower.getPastTotalSupply(block.number - 1), 1000);
+
+        bgt.mintTo(user1, 1500);
+        vm.roll(block.number + 1);
+        assertEq(bicPower.getVotes(user1), 1000);
+
+        vm.prank(user1);
+        bicPower.delegate(user1);
+        vm.roll(block.number + 1);
+        console.log("balanceOf %s", bicPower.balanceOf(user1));
+        console.log("getVotes %s", bicPower.getVotes(user1));
+        assertEq(bicPower.getVotes(user1), 2500);
+        assertEq(bicPower.getPastTotalSupply(block.number - 1), 2500);
+
     }
 }
