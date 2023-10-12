@@ -18,7 +18,6 @@ contract BicVotesUpgradeableV2 is BicVotesUpgradeable {
 
     function _getVotingUnits(address owner) internal view virtual override returns (uint256) {
         console.log("BicVotesUpgradeableV2 _getVotingUnits");
-//        return super._getVotingUnits(owner) + NftVote(nftAddress).balanceOf(owner)*1000;
-        return 2000;
+        return super._getVotingUnits(owner) + NftVote(nftAddress).balanceOf(owner)*1000;
     }
 }
