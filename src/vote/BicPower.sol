@@ -10,6 +10,9 @@ contract BicPower is Votes {
     string private _name;
     string private _symbol;
     mapping(address => uint256) public currentDelegateAmount;
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
     constructor(address _bgtAddress) EIP712("BIC Powers", "1") {
         bgtAddress = _bgtAddress;
         _name = "BIC Powers";
@@ -56,6 +59,7 @@ contract BicPower is Votes {
         // update in case BGT be minted
         if(newDelegateAmount > oldDelegateAmount) {
             super._transferVotingUnits(address(0), delegatee, newDelegateAmount - oldDelegateAmount);
+            emit Transfer(address(0), delegatee, newDelegateAmount - oldDelegateAmount);
         }
         currentDelegateAmount[owner] = newDelegateAmount;
         super._delegate(owner, delegatee);
