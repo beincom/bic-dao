@@ -25,6 +25,7 @@ contract TokenVoteTest is Test {
     function testDelegate() public {
         tokenVote.mintTo(user1, 100);
         assertEq(tokenVote.balanceOf(user1), 100);
+        vm.roll(block.number + 1); // delegate active after 1 block
         assertEq(tokenVote.getVotes(user1), 0);
 
         vm.prank(user1);
