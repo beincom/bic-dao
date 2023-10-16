@@ -1,0 +1,8 @@
+{
+  "output": "generated/graph.",
+  "chain": "chapel",
+  "datasources": [
+    { "address": "0x0A2083Ca60D7782CFE82BcB769E3A4279de403E0", "startBlock": 33936081, "module": "governor" },
+    { "address": "0x27bd375e970Ca0E3BbA4c775F4866A4Ba0071766", "startBlock":  33936076, "module": "voting" }
+  ]
+}
