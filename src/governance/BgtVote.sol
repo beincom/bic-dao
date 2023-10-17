@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 
 import "../token/BeinGiveTake.sol";
 import "@openzeppelin/contracts/governance/Governor.sol";
@@ -23,11 +23,11 @@ contract BgtVote is Governor, GovernorCountingSimple, GovernorSettings, Votes {
         return GovernorSettings.proposalThreshold();
     }
 
-    function CLOCK_MODE() public view virtual override(IGovernor, Votes) returns (string memory) {
+    function CLOCK_MODE() public view virtual override(Governor, Votes) returns (string memory) {
         return Votes.CLOCK_MODE();
     }
 
-    function clock() public view virtual override(IGovernor, Votes) returns (uint48) {
+    function clock() public view virtual override(Governor, Votes) returns (uint48) {
         return Votes.clock();
     }
 
