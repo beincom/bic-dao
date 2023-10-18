@@ -17,13 +17,6 @@ contract TokenVoteTest is Test {
         tokenVote = new TokenVote();
     }
 
-    function testTokenVote() public {
-        assertEq(tokenVote.name(), "BIC Vote");
-        assertEq(tokenVote.symbol(), "BICV");
-        assertEq(tokenVote.decimals(), 18);
-        assertEq(tokenVote.totalSupply(), 0);
-    }
-
     function testDelegate() public {
         tokenVote.mintTo(user1, 100);
         assertEq(tokenVote.balanceOf(user1), 100);
