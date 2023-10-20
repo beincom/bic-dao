@@ -54,7 +54,6 @@ contract BicPower is Votes {
     function _delegate(address owner, address delegatee) internal virtual override {
         uint256 oldDelegateAmount = currentDelegateAmount[owner];
         uint256 newDelegateAmount = _getVotingUnits(owner);
-        address oldDelegate = delegates(owner);
 
         // update in case BGT be minted
         if(newDelegateAmount > oldDelegateAmount) {

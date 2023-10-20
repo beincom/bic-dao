@@ -18,21 +18,21 @@ async function main() {
         console.log(`Verify fail BGT on ${bgtAddress} with error ${e}`);
     }
 
-    const BicVotes = await ethers.getContractFactory("BicVotes");
-    const bicVotes = await BicVotes.deploy(bgtAddress);
-    await bicVotes.waitForDeployment();
-    const bicVotesAddress = await bicVotes.getAddress();
+    const BicPower = await ethers.getContractFactory("BicPower");
+    const bicPower = await BicPower.deploy(bgtAddress);
+    await bicPower.waitForDeployment();
+    const bicVotesAddress = await bicPower.getAddress();
 
-    console.log(`Deploy success BicVotes on ${bicVotesAddress}`);
+    console.log(`Deploy success BicPower on ${bicVotesAddress}`);
     try {
-        console.log(`Verify BicVotes on ${bicVotesAddress}`);
+        console.log(`Verify BicPower on ${bicVotesAddress}`);
         await run(`verify:verify`, {
             address: bicVotesAddress,
             constructorArguments: [bgtAddress],
         });
-        console.log(`Verify success BicVotes on ${bicVotesAddress}`);
+        console.log(`Verify success BicPower on ${bicVotesAddress}`);
     } catch (e) {
-        console.log(`Verify fail BicVotes on ${bicVotesAddress} with error ${e}`);
+        console.log(`Verify fail BicPower on ${bicVotesAddress} with error ${e}`);
     }
 
     const BicGovernor = await ethers.getContractFactory("BicGovernor");
