@@ -18,8 +18,25 @@ async function main() {
         console.log(`Verify fail BGT on ${bgtAddress} with error ${e}`);
     }
 
+    const BIC = await ethers.getContractFactory("BeinChain");
+    const bic = await BIC.deploy();
+    await bic.waitForDeployment();
+    const bicAddress = await bic.getAddress();
+
+    console.log(`Deploy success BIC on ${bicAddress}`);
+    try {
+        console.log(`Verify BIC on ${bicAddress}`);
+        await run(`verify:verify`, {
+            address: bicAddress,
+            constructorArguments: [],
+        });
+        console.log(`Verify success BIC on ${bicAddress}`);
+    } catch (e) {
+        console.log(`Verify fail BIC on ${bicAddress} with error ${e}`);
+    }
+
     const BicPower = await ethers.getContractFactory("BicPower");
-    const bicPower = await BicPower.deploy(bgtAddress);
+    const bicPower = await BicPower.deploy(bgtAddress, bicAddress);
     await bicPower.waitForDeployment();
     const bicVotesAddress = await bicPower.getAddress();
 
@@ -28,7 +45,7 @@ async function main() {
         console.log(`Verify BicPower on ${bicVotesAddress}`);
         await run(`verify:verify`, {
             address: bicVotesAddress,
-            constructorArguments: [bgtAddress],
+            constructorArguments: [bgtAddress, bicAddress],
         });
         console.log(`Verify success BicPower on ${bicVotesAddress}`);
     } catch (e) {
@@ -40,15 +57,12 @@ async function main() {
     await bicGovernor.waitForDeployment();
     const bicGovernorAddress = await bicGovernor.getAddress();
 
-    // const bicGovernorAddress = "0x1fF8593316c5DEC3a181a1955386d32f67932E97"
-
     console.log(`Deploy success BicGovernor on ${bicGovernorAddress}`);
     try {
         console.log(`Verify BicGovernor on ${bicGovernorAddress}`);
         await run(`verify:verify`, {
             address: bicGovernorAddress,
             constructorArguments: [bicVotesAddress],
-            // constructorArguments: ["0x9ba1537e29290aB2147fef34504E3ec65891b25A"],
         });
         console.log(`Verify success BicGovernor on ${bicGovernorAddress}`);
     } catch (e) {
