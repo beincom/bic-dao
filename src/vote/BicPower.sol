@@ -1,26 +1,28 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
-import "../token/BeinGiveTake.sol";
+import "../interfaces/IBeinGiveTake.sol";
+import "../interfaces/IBeinCommunity.sol";
 import "@openzeppelin/contracts/governance/utils/Votes.sol";
-import "forge-std/console.sol";
 
 contract BicPower is Votes {
     address public bgtAddress;
+    address public bicAddress;
     string private _name;
     string private _symbol;
     mapping(address => uint256) public currentDelegateAmount;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
 
-    constructor(address _bgtAddress) EIP712("BIC Powers", "1") {
+    constructor(address _bgtAddress, address _bicAddress) EIP712("BIC Powers", "1") {
         bgtAddress = _bgtAddress;
+        bicAddress = _bicAddress;
         _name = "BIC Powers";
         _symbol = "BIC POWERS";
     }
 
     function _getVotingUnits(address owner) internal view virtual override returns (uint256) {
-        return BeinGiveTake(bgtAddress).balanceOf(owner);
+        return IBeinGiveTake(bgtAddress).balanceOf(owner);
     }
 
     function CLOCK_MODE() public view virtual override returns (string memory) {
@@ -44,7 +46,7 @@ contract BicPower is Votes {
     }
 
     function totalSupply() public view returns (uint256) {
-        return BeinGiveTake(bgtAddress).totalSupply();
+        return IBeinGiveTake(bgtAddress).totalSupply();
     }
 
     function balanceOf(address account) public view returns (uint256) {
@@ -52,6 +54,7 @@ contract BicPower is Votes {
     }
 
     function _delegate(address owner, address delegatee) internal virtual override {
+        require(!IBeinCommunity(bicAddress).blacklist(owner), "BIC: blacklisted");
         uint256 oldDelegateAmount = currentDelegateAmount[owner];
         uint256 newDelegateAmount = _getVotingUnits(owner);
 

@@ -1,14 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
-import "../src/token/BeinGiveTake.sol";
+import "../src/test/BeinGiveTake.sol";
+import "../src/test/BeinChain.sol";
 import "../src/governance/BicGovernor.sol";
 import "../src/vote/BicPower.sol";
 import "forge-std/Test.sol";
 
 contract BicPowerTest is Test {
     BeinGiveTake public bgt;
+    BeinChain public bic;
     BicPower public bicPower;
+
     uint256 public user1PKey = 0x1;
     address public user1 = vm.addr(user1PKey);
     uint256 public user2PKey = 0x2;
@@ -22,7 +25,8 @@ contract BicPowerTest is Test {
 
     function setUp() public {
         bgt = new BeinGiveTake();
-        bicPower = new BicPower(address(bgt));
+        bic = new BeinChain();
+        bicPower = new BicPower(address(bgt), address(bic));
 
         bgt.mintTo(user1, 1000);
         bgt.mintTo(user2, 2000);

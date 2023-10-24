@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/extensions/AccessControlEnumerable.sol";
-import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 
 contract BeinGiveTake is Context, AccessControlEnumerable {
     bytes32 public constant MINT_ROLE = keccak256("MINT_ROLE");
@@ -11,9 +10,9 @@ contract BeinGiveTake is Context, AccessControlEnumerable {
     constructor() {
         address adminAddress = msg.sender;
 
-        _grantRole(DEFAULT_ADMIN_ROLE, adminAddress);
+        _setupRole(DEFAULT_ADMIN_ROLE, adminAddress);
 
-        _grantRole(MINT_ROLE, adminAddress);
+        _setupRole(MINT_ROLE, adminAddress);
 
         _name = "Bein Give and Take";
         _symbol = "BGT";
