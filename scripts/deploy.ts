@@ -53,7 +53,7 @@ async function main() {
     }
 
     const BicGovernor = await ethers.getContractFactory("BicGovernor");
-    const bicGovernor = await BicGovernor.deploy(bicVotesAddress);
+    const bicGovernor = await BicGovernor.deploy(bicVotesAddress, 60, 300, 100);
     await bicGovernor.waitForDeployment();
     const bicGovernorAddress = await bicGovernor.getAddress();
 
@@ -62,7 +62,7 @@ async function main() {
         console.log(`Verify BicGovernor on ${bicGovernorAddress}`);
         await run(`verify:verify`, {
             address: bicGovernorAddress,
-            constructorArguments: [bicVotesAddress],
+            constructorArguments: [bicVotesAddress, 60, 300, 100],
         });
         console.log(`Verify success BicGovernor on ${bicGovernorAddress}`);
     } catch (e) {

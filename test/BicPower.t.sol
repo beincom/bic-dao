@@ -55,6 +55,17 @@ contract BicPowerTest is Test {
         console.log("getVotes %s", bicPower.getVotes(user1));
         assertEq(bicPower.getVotes(user1), 2500);
         assertEq(bicPower.getPastTotalSupply(block.number - 1), 2500);
+    }
 
+    function testBlacklistPower() public {
+        bic.blockAddress(user2);
+        vm.prank(user2);
+        vm.expectRevert("BIC: blacklisted");
+        bicPower.delegate(user2);
+        assertEq(bicPower.getVotes(user2), 0);
+        bic.unblockAddress(user2);
+        vm.prank(user2);
+        bicPower.delegate(user2);
+        assertEq(bicPower.getVotes(user2), 2000);
     }
 }
